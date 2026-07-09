@@ -1,0 +1,19 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$FORGEJO_HOST} {
+	reverse_proxy forgejo:3000
+}
+
+{$AUTHENTIK_HOST_DOMAIN} {
+	reverse_proxy authentik-server:9000
+}
+
+{$GRAFANA_HOST} {
+	reverse_proxy grafana:3000
+}
+
+{$PORTAL_HOST} {
+	reverse_proxy portal:8080
+}
