@@ -1,16 +1,34 @@
 package handlers
 
 import (
-	"html/template"
-	"log"
 	"net/http"
+
+	"github.com/TaoRuiz/LeGarage/web-portal/internal/config"
+	"github.com/gin-gonic/gin"
 )
 
-var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
+func Index(cfg *config.Config) gin.HandlerFunc {
+	services := []struct {
+		Name string
+		URL  string
+	}{
+		{"Forgejo", cfg.ForgejoURL},
+		{"Authentik", cfg.AuthentikURL},
+		{"Grafana", cfg.GrafanaURL},
+		{"Prometheus", cfg.PrometheusURL},
+	}
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	if err := indexTmpl.Execute(w, nil); err != nil {
-		log.Printf("template error: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	return func(c *gin.Context) {
+		statuses := make([]ServiceStatus, len(services))
+		for i, s := range services {
+			statuses[i] = ServiceStatus{
+				Name:    s.Name,
+				Healthy: checkService(s.URL),
+			}
+		}
+
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"Services": statuses,
+		})
 	}
 }
