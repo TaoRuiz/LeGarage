@@ -15,21 +15,29 @@
     <h2>État des services</h2>
     <ul id="services">
         {{range .Services}}
-        <li>{{if .Healthy}}<span class="service-up">●</span>{{else}}<span class="service-down">●</span>{{end}} {{.Name}}</li>
+        <li>{{if .Healthy}}<span class="service-up">●</span>{{else}}<span class="service-down">●</span>{{end}} {{.Name}}
+        </li>
         {{end}}
     </ul>
 </article>
 <article>
     <h2>Activité Git</h2>
-    <ul>
-        {{range .Repos}}
-        <li>
-            <a href="{{.HTMLURL}}">{{.FullName}}</a>
-            {{if .Description}}- {{.Description}}{{end}}
-            {{if .Language}}<em>({{.Language}})</em>{{end}}
-        </li>
-        {{end}}
-    </ul>
+    {{range .Repos}}
+    <div>
+        <a href="{{.Repo.HTMLURL}}">{{.Repo.FullName}}</a>
+        {{if .Repo.Description}}<p>{{.Repo.Description}}</p>{{end}}
+        <ul>
+            {{range .Commits}}
+            <li>
+                <a href="{{.HTMLURL}}">{{slice .SHA 0 7}}</a>
+                — {{.Commit.Message}}
+                <small>{{.Commit.Author.Name}} · {{.Commit.Author.Date.Format "2006-01-02"}}</small>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+    {{end}}
+
 </article>
 <article>
     <h2>Métriques</h2>
