@@ -1,0 +1,18 @@
+body {
+  font-family: sans-serif;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+#services li {
+  list-style: none;
+}
+
+.service-down {
+  color: red;
+}
+
+.service-up {
+  color: green;
+}
