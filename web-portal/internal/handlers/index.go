@@ -7,6 +7,7 @@ import (
 
 	"github.com/TaoRuiz/LeGarage/web-portal/internal/config"
 	"github.com/TaoRuiz/LeGarage/web-portal/internal/forgejo"
+	"github.com/TaoRuiz/LeGarage/web-portal/internal/store"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +16,7 @@ type RepoWithCommits struct {
 	Commits []forgejo.Commit
 }
 
-func Index(cfg *config.Config) gin.HandlerFunc {
+func Index(cfg *config.Config, s *store.Store) gin.HandlerFunc {
 	services := []struct {
 		Name string
 		URL  string
@@ -51,6 +52,7 @@ func Index(cfg *config.Config) gin.HandlerFunc {
 			if len(parts) != 2 {
 				continue
 			}
+
 			commits, err := forgejoClient.GetCommits(parts[0], parts[1], 3)
 			if err != nil {
 				log.Printf("commits error for %s: %v", repo.FullName, err)
@@ -61,9 +63,16 @@ func Index(cfg *config.Config) gin.HandlerFunc {
 			})
 		}
 
+		// Release
+		releases, err := s.ListReleases(10)
+		if err != nil {
+			log.Printf("store error: %v", err)
+		}
+
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"Services": statuses,
 			"Repos":    reposWithCommits,
+			"Releases": releases,
 		})
 	}
 }
