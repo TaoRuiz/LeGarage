@@ -18,6 +18,6 @@
 - Adds an external dependency
 
 ## Decision
-Gin. The goal is to deliver a functional, readable project — not to demonstrate
+Gin. The goal is to deliver a functional, readable project, not to demonstrate
 framework internals. Gin reflects real-world Go project choices and keeps the
 codebase concise.
