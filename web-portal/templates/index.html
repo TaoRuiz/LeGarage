@@ -44,6 +44,17 @@
 </article>
 <article>
     <h2>Changelog/historique de déploiements</h2>
+    <ul>
+        {{range .Releases}}
+        <li>
+            <a href="{{.HTMLURL}}">{{.Repo}} — {{.TagName}}</a>
+            {{if .Name}}<em>{{.Name}}</em>{{end}}
+            <small>{{.Author}} · {{.PublishedAt.Format "2006-01-02"}}</small>
+        </li>
+        {{else}}
+        <li>No releases recorded yet.</li>
+        {{end}}
+    </ul>
 </article>
 </body>
 </html>
