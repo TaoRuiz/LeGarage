@@ -10,8 +10,8 @@ export const usePlatformToolsStore = defineStore('platform-tools-store', () => {
   const tools = ref([])
 
   function startPolling() {
-    intervalId = setInterval(() => {
-      tools.value = PlatformToolsService.getList()
+    intervalId = setInterval(async () => {
+      tools.value = await PlatformToolsService.getList()
     }, 2000)
   }
 

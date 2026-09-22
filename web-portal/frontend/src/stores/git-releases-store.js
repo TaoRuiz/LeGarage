@@ -10,8 +10,8 @@ export const useGitReleasesStore = defineStore('git-releases-store', () => {
   const releases = ref([])
 
   function startPolling() {
-    intervalId = setInterval(() => {
-      releases.value = GitReleasesService.getList()
+    intervalId = setInterval(async () => {
+      releases.value = await GitReleasesService.getList()
     }, 2000)
   }
 

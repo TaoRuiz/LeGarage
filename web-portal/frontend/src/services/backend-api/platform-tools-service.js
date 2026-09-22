@@ -1,22 +1,6 @@
 export default {
-  getList() {
-    return [...[],
-      {
-        'name': 'Forgejo',
-        'healthy': true
-      },
-      {
-        'name': 'Authentik',
-        'healthy': true
-      },
-      {
-        'name': 'Grafana',
-        'healthy': true
-      },
-      {
-        'name': 'Prometheus',
-        'healthy': true
-      },
-    ]
+  async getList() {
+    const response = await fetch('http://localhost:8080/api/platform-tools-services')
+    return response.json()
   }
 }

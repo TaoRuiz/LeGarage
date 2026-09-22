@@ -5,6 +5,7 @@ import (
 	"github.com/TaoRuiz/LeGarage/web-portal/internal/handlers"
 	"github.com/TaoRuiz/LeGarage/web-portal/internal/store"
 	"github.com/TaoRuiz/LeGarage/web-portal/internal/webhook"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,15 +21,23 @@ func New(cfg *config.Config, store *store.Store) *Server {
 		cfg:    cfg,
 		store:  store,
 	}
+	s.router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{cfg.WebPortalFrontURL},
+		AllowMethods: []string{"GET", "POST"},
+	}))
+
 	s.routes()
 	return s
 }
 
 func (s *Server) routes() {
-	s.router.Static("/static", "./static")
-	s.router.LoadHTMLGlob("templates/*")
-	s.router.GET("/", handlers.Index(s.cfg, s.store))
-	s.router.POST("/webhook/release", webhook.HandleRelease(s.store))
+	s.router.POST("/webhook/release", webhook.HandleGitRelease(s.store))
+	api := s.router.Group("/api")
+	{
+		api.GET("/platform-tools-services", handlers.ApiPlatformToolsServices(s.cfg))
+		api.GET("/git-releases", handlers.ApiGitReleases(s.store))
+		api.GET("/git-repositories", handlers.ApiGitRepositories(s.cfg))
+	}
 }
 
 func (s *Server) Start(addr string) error {

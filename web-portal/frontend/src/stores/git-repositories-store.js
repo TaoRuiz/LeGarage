@@ -10,8 +10,8 @@ export const useGitRepositoriesStore = defineStore('git-repositories-store', () 
   const repositories = ref([])
 
   function startPolling() {
-    intervalId = setInterval(() => {
-      repositories.value = GitRepositoriesService.getList()
+    intervalId = setInterval(async () => {
+      repositories.value = await GitRepositoriesService.getList()
     }, 2000)
   }
 

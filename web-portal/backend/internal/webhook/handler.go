@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type releasePayload struct {
+type gitReleasePayload struct {
 	Action  string `json:"action"`
 	Release struct {
 		TagName     string    `json:"tag_name"`
@@ -25,9 +25,9 @@ type releasePayload struct {
 	} `json:"repository"`
 }
 
-func HandleRelease(s *store.Store) gin.HandlerFunc {
+func HandleGitRelease(s *store.Store) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var payload releasePayload
+		var payload gitReleasePayload
 		if err := c.ShouldBindJSON(&payload); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid payload"})
 			return

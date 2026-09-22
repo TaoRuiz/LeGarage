@@ -5,9 +5,14 @@ import (
 	"time"
 )
 
-type ServiceStatus struct {
-	Name    string
-	Healthy bool
+type platformToolsService struct {
+	Name string
+	URL  string
+}
+
+type PlatformToolsServiceStatus struct {
+	Name    string `json:"name"`
+	Healthy bool   `json:"healthy"`
 }
 
 var httpClient = &http.Client{

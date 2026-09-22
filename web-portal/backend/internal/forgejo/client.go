@@ -12,7 +12,7 @@ type Client struct {
 	httpClient *http.Client
 }
 
-type Repo struct {
+type GitRepository struct {
 	Name        string    `json:"name"`
 	FullName    string    `json:"full_name"`
 	Description string    `json:"description"`
@@ -21,7 +21,7 @@ type Repo struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-type Commit struct {
+type GitCommit struct {
 	HTMLURL string `json:"html_url"`
 	SHA     string `json:"sha"`
 	Commit  struct {
@@ -40,7 +40,7 @@ func NewClient(baseURL string) *Client {
 	}
 }
 
-func (c *Client) GetPublicRepos() ([]Repo, error) {
+func (c *Client) GetPublicGitRepositories() ([]GitRepository, error) {
 	url := fmt.Sprintf("%s/api/v1/repos/search?limit=10&is_private=false", c.baseURL)
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
@@ -49,7 +49,7 @@ func (c *Client) GetPublicRepos() ([]Repo, error) {
 	defer resp.Body.Close()
 
 	var result struct {
-		Data []Repo `json:"data"`
+		Data []GitRepository `json:"data"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (c *Client) GetPublicRepos() ([]Repo, error) {
 	return result.Data, nil
 }
 
-func (c *Client) GetCommits(owner, repo string, limit int) ([]Commit, error) {
+func (c *Client) GetCommits(owner, repo string, limit int) ([]GitCommit, error) {
 	url := fmt.Sprintf("%s/api/v1/repos/%s/%s/commits?limit=%d", c.baseURL, owner, repo, limit)
 	resp, err := c.httpClient.Get(url)
 	if err != nil {
@@ -65,7 +65,7 @@ func (c *Client) GetCommits(owner, repo string, limit int) ([]Commit, error) {
 	}
 	defer resp.Body.Close()
 
-	var commits []Commit
+	var commits []GitCommit
 	if err := json.NewDecoder(resp.Body).Decode(&commits); err != nil {
 		return nil, err
 	}
