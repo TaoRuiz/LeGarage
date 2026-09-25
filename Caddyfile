@@ -15,5 +15,10 @@
 }
 
 {$PORTAL_HOST} {
-	reverse_proxy portal:8080
+	handle /api/* {
+		reverse_proxy portal-backend:8080
+	}
+	handle {
+		reverse_proxy portal-frontend:80
+	}
 }
