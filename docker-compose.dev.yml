@@ -29,3 +29,12 @@ services:
   prometheus:
     ports:
       - "9090:9090"
+
+  portal-backend:
+    ports:
+      - "8080:8080"
+    environment:
+      WEBPORTALFRONT_URL: http://localhost:8081
+
+  portal-frontend:
+    profiles: ["disabled"]

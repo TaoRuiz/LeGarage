@@ -182,6 +182,35 @@ services:
     networks:
       - garage
 
+  # ---------------------------------------------------------------------------
+  # Portal
+  # ---------------------------------------------------------------------------
+  portal-backend:
+    build:
+      context: ./web-portal/backend
+      dockerfile: Dockerfile
+    container_name: garage-portal-backend
+    restart: unless-stopped
+    environment:
+      FORGEJO_URL: http://garage-forgejo:3000
+      AUTHENTIK_URL: http://garage-authentik-server:9000
+      GRAFANA_URL: http://garage-grafana:3000
+      PROMETHEUS_URL: http://garage-prometheus:9090
+      WEBPORTALFRONT_URL: https://${PORTAL_HOST}
+    volumes:
+      - portal_data:/app/data
+    networks:
+      - garage
+
+  portal-frontend:
+    build:
+      context: ./web-portal/frontend
+      dockerfile: Dockerfile
+    container_name: garage-portal-frontend
+    restart: unless-stopped
+    networks:
+      - garage
+
 volumes:
   caddy_data:
   caddy_config:
@@ -192,6 +221,7 @@ volumes:
   authentik_templates:
   prometheus_data:
   grafana_data:
+  portal_data:
 
 networks:
   garage:

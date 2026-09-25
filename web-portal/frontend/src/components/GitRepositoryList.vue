@@ -10,7 +10,7 @@ onUnmounted(() => store.stopPolling())
 <template>
   <h2>Activité Git</h2>
   <div v-for="repository in store.repositories">
-    <a href="{{repository.url}}">{{ repository.name }}</a>
+    <a :href="repository.url">{{ repository.name }}</a>
     <p v-if="repository.description">{{ repository.description }}</p>
     <ul>
       <li v-for="commit in repository.commits">
